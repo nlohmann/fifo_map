@@ -1,0 +1,41 @@
+language: cpp
+
+sudo: false
+
+compiler:
+  - gcc
+
+env:
+  - COMPILER=g++-4.9
+  - COMPILER=g++-5
+  - COMPILER=clang-3.6
+
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    - llvm-toolchain-precise
+    - llvm-toolchain-precise-3.6
+    - llvm-toolchain-precise-3.7
+    packages:
+    - g++-4.9
+    - g++-5
+    - clang-3.6
+    - valgrind
+    - python-pip
+    - python-yaml
+
+before_script:
+  - pip install --user git+git://github.com/eddyxu/cpp-coveralls.git
+
+script:
+  - make CXX=$COMPILER CXXFLAGS="-lstdc++"
+  - ./unit
+  - valgrind --error-exitcode=1 --leak-check=full ./unit
+
+after_success:
+  - if [ "$COMPILER" = "g++-4.9" ]; then make clean ; fi
+  - if [ "$COMPILER" = "g++-4.9" ]; then touch test/unit.cpp ; fi
+  - if [ "$COMPILER" = "g++-4.9" ]; then make unit CXXFLAGS="-fprofile-arcs -ftest-coverage -std=c++11 -lstdc++" CXX=$COMPILER ; fi
+  - if [ "$COMPILER" = "g++-4.9" ]; then ./unit ; fi
+  - if [ "$COMPILER" = "g++-4.9" ]; then coveralls --exclude test/catch.hpp --exclude test/unit.cpp --include src/fifo_compare.hpp --include src/fifo_map.hpp --gcov-options '\-lp' --gcov 'gcov-4.9' ; fi
