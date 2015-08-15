@@ -60,7 +60,7 @@ class fifo_compare
 
         // needle not found: insert it and return its index
         keys.push_back(needle);
-        return keys.size();
+        return keys.size() + 1;
     }
 
     /// an ordered list of keys
