@@ -409,5 +409,25 @@ TEST_CASE("modifiers")
             CHECK(m_filled.m_keys.size() == 5);
             CHECK(collect_keys(m_filled) == "XCAZB");
         }
+
+        SECTION("insert range")
+        {
+            // check initial state
+            CHECK(m_filled.size() == 2);
+            CHECK(m_filled.m_keys.size() == 2);
+            CHECK(collect_keys(m_filled) == "XC");
+
+            // insert range
+            std::map<std::string, int> values = {{"A", 3}, {"Z", 4}, {"B", 5}};
+            m_filled.insert(values.begin(), values.end());
+            CHECK(m_filled["A"] == 3);
+            CHECK(m_filled["Z"] == 4);
+            CHECK(m_filled["B"] == 5);
+
+            // check that keys and values were inserted
+            CHECK(m_filled.size() == 5);
+            CHECK(m_filled.m_keys.size() == 5);
+            CHECK(collect_keys(m_filled) == "XCABZ");
+        }
     }
 }
