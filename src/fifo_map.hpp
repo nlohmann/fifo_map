@@ -115,24 +115,24 @@ template <
     /// default constructor
     fifo_map() : m_keys(), m_compare(m_keys), m_map(m_compare) {}
 
-    template< class InputIterator >
+    template<class InputIterator>
     fifo_map(InputIterator first, InputIterator last)
-     : m_keys(), m_compare(m_keys), m_map(m_compare)
+        : m_keys(), m_compare(m_keys), m_map(m_compare)
     {
         for (auto it = first; it != last; ++it)
         {
             insert(*it);
         }
     }
-    
+
     fifo_map(std::initializer_list<value_type> init) : fifo_map()
     {
-        for (auto x: init)
+        for (auto x : init)
         {
             insert(x);
         }
     }
-    
+
     fifo_map(const fifo_map&) = default;
     fifo_map(fifo_map&&) = default;
     fifo_map& operator=(const fifo_map&) = default;
@@ -140,7 +140,7 @@ template <
     /// destructor
     ~fifo_map() = default;
 
-    
+
     /*
      * Element access
      */
@@ -193,7 +193,7 @@ template <
     {
         return m_map.begin();
     }
-    
+
     /// returns an iterator to the end
     const_iterator end() const
     {
@@ -205,7 +205,7 @@ template <
     {
         return m_map.cbegin();
     }
-    
+
     /// returns an iterator to the end
     const_iterator cend() const
     {
@@ -217,25 +217,25 @@ template <
     {
         return m_map.rbegin();
     }
-    
+
     /// returns a reverse iterator to the end
     reverse_iterator rend()
     {
         return m_map.rend();
     }
-    
+
     /// returns a reverse iterator to the beginning
     const_reverse_iterator rbegin() const
     {
         return m_map.rbegin();
     }
-    
+
     /// returns a reverse iterator to the end
     const_reverse_iterator rend() const
     {
         return m_map.rend();
     }
-    
+
     /// returns a reverse iterator to the beginning
     const_reverse_iterator crbegin() const
     {
@@ -248,7 +248,7 @@ template <
         return m_map.crend();
     }
 
-    
+
     /*
      * Capacity
      */
@@ -271,7 +271,7 @@ template <
         return m_map.max_size();
     }
 
-    
+
     /*
      * Modifiers
      */
@@ -283,19 +283,19 @@ template <
         m_keys.clear();
     }
 
-    std::pair<iterator,bool> insert(const value_type& value)
+    std::pair<iterator, bool> insert(const value_type& value)
     {
         m_compare.add_key(value.first);
         return m_map.inseert(value);
     }
 
     template<class P>
-    std::pair<iterator,bool> insert( P&& value )
+    std::pair<iterator, bool> insert( P&& value )
     {
         m_compare.add_key(value.first);
         return m_map.insert(value);
     }
-    
+
     iterator insert(const_iterator hint, const value_type& value)
     {
         m_compare.add_key(value.first);
@@ -318,7 +318,7 @@ template <
 
         m_map.insert(first, last);
     }
-    
+
     void insert(std::initializer_list<value_type> ilist)
     {
         for (auto value : ilist)
@@ -368,7 +368,7 @@ template <
         std::swap(m_keys, other.m_keys);
     }
 
-    
+
     /*
      * Lookup
      */
@@ -390,7 +390,7 @@ template <
     {
         return m_map.find(key);
     }
-    
+
     /// returns range of elements matching a specific key
     std::pair<iterator, iterator> equal_range(const Key& key)
     {
@@ -420,14 +420,14 @@ template <
     {
         return m_map.upper_bound(key);
     }
-    
+
     /// returns an iterator to the first element greater than the given key
     const_iterator upper_bound(const Key& key) const
     {
         return m_map.upper_bound(key);
     }
 
-    
+
     /*
      * Observers
      */
@@ -437,8 +437,8 @@ template <
     {
         return m_compare;
     }
-    
-    
+
+
     /*
      * Non-member functions
      */

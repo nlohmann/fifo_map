@@ -12,66 +12,12 @@
 
 #define private public
 #include "fifo_map.hpp"
-#include "fifo_compare.hpp"
 
-using nlohmann::fifo_compare;
 using nlohmann::fifo_map;
 
 #include <string>
 
-/*
-TEST_CASE("fifo_compare")
-{
-    SECTION("std::map")
-    {
-        // create std::map with fifo_compare
-        std::map<std::string, int, fifo_compare<std::string>> experiment;
-        
-        // insert elements
-        experiment["first"] = 1;
-        experiment["second"] = 2;
-        experiment.insert({"third", 3});
-        experiment.insert(experiment.begin(), {"fourth", 4});
-        
-        // check if elements are returned in the order of insertion
-        int i = 1;
-        for (auto x : experiment)
-        {
-            CAPTURE(i);
-            CAPTURE(x.first);
-            CAPTURE(x.second);
-            CHECK(x.second == i++);
-        }
-    }
-
-    SECTION("std::set")
-    {
-        // create std::set with fifo_compare
-        std::set<std::string, fifo_compare<std::string>> experiment;
-        
-        // insert elements
-        experiment.insert("Q");
-        experiment.insert("W");
-        experiment.insert("E");
-        experiment.insert("R");
-        experiment.insert("T");
-        experiment.insert("Y");
-        
-        // check if elements are returned in the order of insertion
-        std::string result;
-        for (auto x : experiment)
-        {
-            result += x;
-        }
-        
-        CHECK(result == "QWERTY");
-    }
-}
-*/
-
-TEST_CASE("fifo_map")
-{
-    SECTION("element access")
+    TEST_CASE("element access")
     {
         fifo_map<std::string, int> m = {{"C", 1}, {"A", 2}, {"B", 3}};
         const fifo_map<std::string, int> mc = m;
@@ -102,7 +48,7 @@ TEST_CASE("fifo_map")
         }
     }
     
-    SECTION("iterators")
+    TEST_CASE("iterators")
     {
         fifo_map<std::string, int> m = {{"C", 1}, {"A", 2}, {"B", 3}};
         const fifo_map<std::string, int> mc = m;
@@ -166,5 +112,4 @@ TEST_CASE("fifo_map")
             ++it;
             CHECK(it == mc.cend());
         }
-    }
 }
