@@ -432,3 +432,39 @@ TEST_CASE("modifiers")
         }
     }
 }
+
+TEST_CASE("observers")
+{
+    nlohmann::fifo_map<std::string, int> m = {{"A", 1}, {"B", 2}};
+
+    SECTION("key_comp")
+    {
+        auto comp = m.key_comp();
+        CHECK(comp("A", "B"));
+        CHECK(comp("A", "C"));
+        CHECK(! comp("A", "A"));
+        CHECK(! comp("B", "A"));
+        CHECK(! comp("C", "C"));
+    }
+}
+
+TEST_CASE("non-member functions")
+{
+    nlohmann::fifo_map<std::string, int> m1 = {{"A", 1}, {"B", 2}};
+    nlohmann::fifo_map<std::string, int> m2 = {{"B", 2}, {"A", 1}};
+    nlohmann::fifo_map<std::string, int> m3 = {{"A", 3}, {"B", 4}};
+
+    SECTION("comparison")
+    {
+        CHECK(m1 == m1);
+
+        CHECK(m1 != m2);
+        CHECK(m1 != m3);
+
+        CHECK(m1 < m3);
+        CHECK(m1 <= m3);
+
+        CHECK(m3 > m1);
+        CHECK(m3 >= m1);
+    }
+}
