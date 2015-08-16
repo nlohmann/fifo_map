@@ -14,6 +14,14 @@ C++ allows to defined associative containers such as `std::map`. The values are 
 
 As it has the same interface than `std::map`, it can be used as drop-in replacement. The code is header-only (see file [src/fifo_map.hpp](https://github.com/nlohmann/fifo_map/blob/master/src/fifo_map.hpp)) and only relies on the STL.
 
+## Complexity
+
+A `fifo_map` object has the space overhead of:
+- one `std::unordered_map<Key, std::size_t>` object to store the key order,
+- one pointer to this object in the `Compare` object.
+
+Inserting a value (via `operator[]`, `insert`) and removing a value (`erase`) rely on `std::unordered_map::insert` and `std::unordered_map::erase` which have O(1) average complexity and O(n) worst-case complexity. All other methods have the same performance as the equivalent `std::map` options.
+
 ## Example
 
 ```cpp

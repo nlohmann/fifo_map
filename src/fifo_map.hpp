@@ -32,6 +32,7 @@ SOFTWARE.
 #include <limits>
 #include <map>
 #include <memory>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 
@@ -46,37 +47,39 @@ template<class Key>
 class fifo_map_compare
 {
   public:
-    fifo_map_compare(std::vector<Key>* k) : keys(k) {}
+    fifo_map_compare(std::unordered_map<Key, std::size_t>* k) : keys(k) {}
 
     bool operator()(const Key& lhs, const Key& rhs) const
     {
-        return find_key(lhs) < find_key(rhs);
+        const auto l = keys->operator[](lhs);
+        const auto r = keys->operator[](rhs);
+        
+        if (l == 0)
+        {
+            // left value not found
+            return false;
+        }
+        if (r == 0)
+        {
+            // right value not found
+            return true;
+        }
+        
+        return l < r;
     }
 
     void add_key(const Key& key)
     {
-        if (find_key(key) == std::numeric_limits<size_t>::max())
-        {
-            keys->push_back(key);
-        }
+        keys->insert({key, keys->size()+1});
     }
 
     void remove_key(const Key& key)
     {
-        keys->erase(std::find(keys->begin(), keys->end(), key));
+        keys->erase(key);
     }
 
   private:
-    std::vector<Key>* keys = nullptr;
-
-    std::size_t find_key(const Key& key) const
-    {
-        const auto it = std::find(keys->begin(), keys->end(), key);
-
-        return (it == keys->end()) ?
-               std::numeric_limits<size_t>::max() :
-               static_cast<std::size_t>(it - keys->begin());
-    }
+    std::unordered_map<Key, std::size_t>* keys = nullptr;
 };
 
 
@@ -472,7 +475,7 @@ template <
 
   private:
     /// the keys
-    std::vector<Key> m_keys;
+    std::unordered_map<Key, std::size_t> m_keys;
     /// the comparison object
     Compare m_compare;
     /// the internal data structure
