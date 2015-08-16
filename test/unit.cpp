@@ -430,6 +430,75 @@ TEST_CASE("modifiers")
             CHECK(m_filled.m_keys.size() == 5);
             CHECK(collect_keys(m_filled) == "XCABZ");
         }
+
+        SECTION("remove element")
+        {
+            // check initial state
+            CHECK(m_filled.size() == 2);
+            CHECK(m_filled.m_keys.size() == 2);
+            CHECK(collect_keys(m_filled) == "XC");
+
+            auto it = m_filled.erase(++m_filled.begin());
+            CHECK(it == m_filled.end());
+
+            // check that key and value was removed
+            CHECK(m_filled.size() == 1);
+            CHECK(m_filled.m_keys.size() == 1);
+            CHECK(collect_keys(m_filled) == "X");
+        }
+
+        SECTION("remove element range")
+        {
+            // check initial state
+            CHECK(m_filled.size() == 2);
+            CHECK(m_filled.m_keys.size() == 2);
+            CHECK(collect_keys(m_filled) == "XC");
+
+            auto it = m_filled.erase(m_filled.begin(), m_filled.end());
+            CHECK(it == m_filled.end());
+
+            // check that key and value was removed
+            CHECK(m_filled.size() == 0);
+            CHECK(m_filled.m_keys.size() == 0);
+            CHECK(collect_keys(m_filled) == "");
+        }
+
+        SECTION("remove element by key")
+        {
+            // check initial state
+            CHECK(m_filled.size() == 2);
+            CHECK(m_filled.m_keys.size() == 2);
+            CHECK(collect_keys(m_filled) == "XC");
+
+            auto count = m_filled.erase("X");
+            CHECK(count == 1);
+
+            // check that key and value was removed
+            CHECK(m_filled.size() == 1);
+            CHECK(m_filled.m_keys.size() == 1);
+            CHECK(collect_keys(m_filled) == "C");
+        }
+
+        SECTION("swap")
+        {
+            // precondition
+            CHECK(m_empty.empty());
+            CHECK(!m_filled.empty());
+
+            // swap
+            m_filled.swap(m_empty);
+
+            // postcondition
+            CHECK(!m_empty.empty());
+            CHECK(m_filled.empty());
+
+            // swap
+            m_filled.swap(m_empty);
+
+            // back to precondition
+            CHECK(m_empty.empty());
+            CHECK(!m_filled.empty());
+        }
     }
 }
 

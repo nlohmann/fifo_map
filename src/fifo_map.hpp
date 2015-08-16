@@ -46,7 +46,7 @@ template<class Key>
 class fifo_map_compare
 {
   public:
-    fifo_map_compare(std::vector<Key>& k) : keys(k) {}
+    fifo_map_compare(std::vector<Key>* k) : keys(k) {}
 
     bool operator()(const Key& lhs, const Key& rhs) const
     {
@@ -57,25 +57,25 @@ class fifo_map_compare
     {
         if (find_key(key) == std::numeric_limits<size_t>::max())
         {
-            keys.push_back(key);
+            keys->push_back(key);
         }
     }
 
     void remove_key(const Key& key)
     {
-        keys.erase(std::find(keys.begin(), keys.end(), key));
+        keys->erase(std::find(keys->begin(), keys->end(), key));
     }
 
   private:
-    std::vector<Key>& keys;
+    std::vector<Key>* keys = nullptr;
 
     std::size_t find_key(const Key& key) const
     {
-        const auto it = std::find(keys.begin(), keys.end(), key);
+        const auto it = std::find(keys->begin(), keys->end(), key);
 
-        return (it == keys.end()) ?
+        return (it == keys->end()) ?
                std::numeric_limits<size_t>::max() :
-               static_cast<std::size_t>(it - keys.begin());
+               static_cast<std::size_t>(it - keys->begin());
     }
 };
 
@@ -109,7 +109,7 @@ template <
 
   public:
     /// default constructor
-    fifo_map() : m_keys(), m_compare(m_keys), m_map(m_compare) {}
+    fifo_map() : m_keys(), m_compare(&m_keys), m_map(m_compare) {}
 
     template<class InputIterator>
     fifo_map(InputIterator first, InputIterator last)
@@ -272,12 +272,14 @@ template <
         m_keys.clear();
     }
 
+    /// insert value
     std::pair<iterator, bool> insert(const value_type& value)
     {
         m_compare.add_key(value.first);
         return m_map.insert(value);
     }
 
+    /// insert value
     template<class P>
     std::pair<iterator, bool> insert( P&& value )
     {
@@ -285,18 +287,21 @@ template <
         return m_map.insert(value);
     }
 
+    /// insert value with hint
     iterator insert(const_iterator hint, const value_type& value)
     {
         m_compare.add_key(value.first);
         return m_map.insert(hint, value);
     }
 
+    /// insert value with hint
     iterator insert(const_iterator hint, value_type&& value)
     {
         m_compare.add_key(value.first);
         return m_map.insert(hint, value);
     }
 
+    /// insert value range
     template<class InputIt>
     void insert(InputIt first, InputIt last)
     {
@@ -308,6 +313,7 @@ template <
         m_map.insert(first, last);
     }
 
+    /// insert value list
     void insert(std::initializer_list<value_type> ilist)
     {
         for (auto value : ilist)
