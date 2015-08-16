@@ -25,15 +25,15 @@ SOFTWARE.
 #ifndef NLOHMANN_FIFO_MAP_HPP
 #define NLOHMANN_FIFO_MAP_HPP
 
+#include <algorithm>
+#include <cstdlib>
+#include <functional>
+#include <iostream>
 #include <limits>
 #include <map>
-#include <vector>
-#include <functional>
 #include <memory>
 #include <utility>
-#include <cstdlib>
-#include <iostream>
-#include <algorithm>
+#include <vector>
 
 /*!
 @brief namespace for Niels Lohmann
@@ -111,6 +111,7 @@ template <
     /// default constructor
     fifo_map() : m_keys(), m_compare(&m_keys), m_map(m_compare) {}
 
+    /// constructor for a range of elements
     template<class InputIterator>
     fifo_map(InputIterator first, InputIterator last)
         : m_keys(), m_compare(m_keys), m_map(m_compare)
@@ -121,6 +122,7 @@ template <
         }
     }
 
+    /// constructor for a list of elements
     fifo_map(std::initializer_list<value_type> init) : fifo_map()
     {
         for (auto x : init)
