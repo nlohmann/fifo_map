@@ -53,7 +53,7 @@ class fifo_map_compare
     {
         const auto l = keys->operator[](lhs);
         const auto r = keys->operator[](rhs);
-        
+
         if (l == 0)
         {
             // left value not found
@@ -64,13 +64,13 @@ class fifo_map_compare
             // right value not found
             return true;
         }
-        
+
         return l < r;
     }
 
     void add_key(const Key& key)
     {
-        keys->insert({key, keys->size()+1});
+        keys->insert({key, keys->size() + 1});
     }
 
     void remove_key(const Key& key)
