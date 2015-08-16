@@ -514,36 +514,128 @@ TEST_CASE("lookup")
         CHECK(m.count("C") == 0);
     }
 
-    SECTION("find (iterators)")
+    SECTION("find")
     {
-        auto it_A = m.find("A");
-        CHECK(it_A == m.begin());
-        CHECK(it_A->first == "A");
-        CHECK(it_A->second == 1);
+        SECTION("iterators")
+        {
+            auto it_A = m.find("A");
+            CHECK(it_A == m.begin());
+            CHECK(it_A->first == "A");
+            CHECK(it_A->second == 1);
 
-        auto it_B = m.find("B");
-        CHECK(it_B == ++m.begin());
-        CHECK(it_B->first == "B");
-        CHECK(it_B->second == 2);
+            auto it_B = m.find("B");
+            CHECK(it_B == ++m.begin());
+            CHECK(it_B->first == "B");
+            CHECK(it_B->second == 2);
 
-        auto it_C = m.find("C");
-        CHECK(it_C == m.end());
+            auto it_C = m.find("C");
+            CHECK(it_C == m.end());
+        }
+
+        SECTION("const_iterators")
+        {
+            auto it_A = m_c.find("A");
+            CHECK(it_A == m_c.cbegin());
+            CHECK(it_A->first == "A");
+            CHECK(it_A->second == 1);
+
+            auto it_B = m_c.find("B");
+            CHECK(it_B == ++m_c.cbegin());
+            CHECK(it_B->first == "B");
+            CHECK(it_B->second == 2);
+
+            auto it_C = m_c.find("C");
+            CHECK(it_C == m_c.cend());
+        }
     }
 
-    SECTION("find (const_iterators)")
+    SECTION("equal_range")
     {
-        auto it_A = m_c.find("A");
-        CHECK(it_A == m_c.cbegin());
-        CHECK(it_A->first == "A");
-        CHECK(it_A->second == 1);
+        SECTION("iterators")
+        {
+            {
+                std::pair<fifo_map<std::string, int>::iterator, fifo_map<std::string, int>::iterator> range =
+                    m.equal_range("A");
+                CHECK(range.first == m.begin());
+                CHECK(range.second == ++m.begin());
+            }
+            {
+                std::pair<fifo_map<std::string, int>::iterator, fifo_map<std::string, int>::iterator> range =
+                    m.equal_range("C");
+                CHECK(range.first == m.end());
+                CHECK(range.second == m.end());
+            }
+        }
 
-        auto it_B = m_c.find("B");
-        CHECK(it_B == ++m_c.cbegin());
-        CHECK(it_B->first == "B");
-        CHECK(it_B->second == 2);
+        SECTION("const_iterators")
+        {
+            {
+                std::pair<fifo_map<std::string, int>::const_iterator, fifo_map<std::string, int>::const_iterator>
+                range = m_c.equal_range("A");
+                CHECK(range.first == m_c.cbegin());
+                CHECK(range.second == ++m_c.cbegin());
+            }
+            {
+                std::pair<fifo_map<std::string, int>::const_iterator, fifo_map<std::string, int>::const_iterator>
+                range = m_c.equal_range("C");
+                CHECK(range.first == m_c.cend());
+                CHECK(range.second == m_c.cend());
+            }
+        }
+    }
 
-        auto it_C = m_c.find("C");
-        CHECK(it_C == m_c.cend());
+    SECTION("lower_bound")
+    {
+        SECTION("iterators")
+        {
+            {
+                fifo_map<std::string, int>::iterator it = m.lower_bound("A");
+                CHECK(it == m.begin());
+            }
+            {
+                fifo_map<std::string, int>::iterator it = m.lower_bound("C");
+                CHECK(it == m.end());
+            }
+        }
+
+        SECTION("const_iterators")
+        {
+            {
+                fifo_map<std::string, int>::const_iterator it = m_c.lower_bound("A");
+                CHECK(it == m_c.cbegin());
+            }
+            {
+                fifo_map<std::string, int>::const_iterator it = m_c.lower_bound("C");
+                CHECK(it == m_c.cend());
+            }
+        }
+    }
+
+    SECTION("upper_bound")
+    {
+        SECTION("iterators")
+        {
+            {
+                fifo_map<std::string, int>::iterator it = m.upper_bound("A");
+                CHECK(it == ++m.begin());
+            }
+            {
+                fifo_map<std::string, int>::iterator it = m.upper_bound("C");
+                CHECK(it == m.end());
+            }
+        }
+
+        SECTION("const_iterators")
+        {
+            {
+                fifo_map<std::string, int>::const_iterator it = m_c.upper_bound("A");
+                CHECK(it == ++m_c.cbegin());
+            }
+            {
+                fifo_map<std::string, int>::const_iterator it = m_c.upper_bound("C");
+                CHECK(it == m_c.cend());
+            }
+        }
     }
 }
 
