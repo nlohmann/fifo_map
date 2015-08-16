@@ -166,73 +166,73 @@ template <
      */
 
     /// returns an iterator to the beginning
-    iterator begin()
+    iterator begin() noexcept
     {
         return m_map.begin();
     }
 
     /// returns an iterator to the end
-    iterator end()
+    iterator end() noexcept
     {
         return m_map.end();
     }
 
     /// returns an iterator to the beginning
-    const_iterator begin() const
+    const_iterator begin() const noexcept
     {
         return m_map.begin();
     }
 
     /// returns an iterator to the end
-    const_iterator end() const
+    const_iterator end() const noexcept
     {
         return m_map.end();
     }
 
     /// returns an iterator to the beginning
-    const_iterator cbegin() const
+    const_iterator cbegin() const noexcept
     {
         return m_map.cbegin();
     }
 
     /// returns an iterator to the end
-    const_iterator cend() const
+    const_iterator cend() const noexcept
     {
         return m_map.cend();
     }
 
     /// returns a reverse iterator to the beginning
-    reverse_iterator rbegin()
+    reverse_iterator rbegin() noexcept
     {
         return m_map.rbegin();
     }
 
     /// returns a reverse iterator to the end
-    reverse_iterator rend()
+    reverse_iterator rend() noexcept
     {
         return m_map.rend();
     }
 
     /// returns a reverse iterator to the beginning
-    const_reverse_iterator rbegin() const
+    const_reverse_iterator rbegin() const noexcept
     {
         return m_map.rbegin();
     }
 
     /// returns a reverse iterator to the end
-    const_reverse_iterator rend() const
+    const_reverse_iterator rend() const noexcept
     {
         return m_map.rend();
     }
 
     /// returns a reverse iterator to the beginning
-    const_reverse_iterator crbegin() const
+    const_reverse_iterator crbegin() const noexcept
     {
         return m_map.crbegin();
     }
 
     /// returns a reverse iterator to the end
-    const_reverse_iterator crend() const
+    const_reverse_iterator crend() const noexcept
     {
         return m_map.crend();
     }
@@ -477,6 +477,17 @@ template <
     internal_map_type m_map;
 };
 
+}
+
+// specialization of std::swap
+namespace std
+{
+template <class Key, class T, class Compare, class Allocator>
+inline void swap(nlohmann::fifo_map<Key, T, Compare, Allocator>& m1,
+                 nlohmann::fifo_map<Key, T, Compare, Allocator>& m2)
+{
+    m1.swap(m2);
+}
 }
 
 #endif

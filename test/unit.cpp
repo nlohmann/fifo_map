@@ -581,4 +581,28 @@ TEST_CASE("non-member functions")
         CHECK(m3 > m1);
         CHECK(m3 >= m1);
     }
+
+    SECTION("std::swap")
+    {
+        nlohmann::fifo_map<std::string, int> m_empty;
+        nlohmann::fifo_map<std::string, int> m_filled = {{"X", 1}, {"C", 2}};
+
+        // precondition
+        CHECK(m_empty.empty());
+        CHECK(!m_filled.empty());
+
+        // swap
+        std::swap(m_filled, m_empty);
+
+        // postcondition
+        CHECK(!m_empty.empty());
+        CHECK(m_filled.empty());
+
+        // swap
+        std::swap(m_filled, m_empty);
+
+        // back to precondition
+        CHECK(m_empty.empty());
+        CHECK(!m_filled.empty());
+    }
 }
