@@ -73,14 +73,9 @@ class fifo_map_compare
     {
         const auto it = std::find(keys.begin(), keys.end(), key);
 
-        if (it != keys.end())
-        {
-            return static_cast<std::size_t>(it - keys.begin());
-        }
-        else
-        {
-            return std::numeric_limits<size_t>::max();
-        }
+        return (it == keys.end()) ?
+               std::numeric_limits<size_t>::max() :
+               static_cast<std::size_t>(it - keys.begin());
     }
 };
 
