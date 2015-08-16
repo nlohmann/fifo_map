@@ -430,7 +430,10 @@ TEST_CASE("modifiers")
             CHECK(m_filled.m_keys.size() == 5);
             CHECK(collect_keys(m_filled) == "XCABZ");
         }
+    }
 
+    SECTION("erase")
+    {
         SECTION("remove element")
         {
             // check initial state
@@ -478,27 +481,89 @@ TEST_CASE("modifiers")
             CHECK(m_filled.m_keys.size() == 1);
             CHECK(collect_keys(m_filled) == "C");
         }
+    }
 
-        SECTION("swap")
-        {
-            // precondition
-            CHECK(m_empty.empty());
-            CHECK(!m_filled.empty());
+    SECTION("swap")
+    {
+        // precondition
+        CHECK(m_empty.empty());
+        CHECK(!m_filled.empty());
 
-            // swap
-            m_filled.swap(m_empty);
+        // swap
+        m_filled.swap(m_empty);
 
-            // postcondition
-            CHECK(!m_empty.empty());
-            CHECK(m_filled.empty());
+        // postcondition
+        CHECK(!m_empty.empty());
+        CHECK(m_filled.empty());
 
-            // swap
-            m_filled.swap(m_empty);
+        // swap
+        m_filled.swap(m_empty);
 
-            // back to precondition
-            CHECK(m_empty.empty());
-            CHECK(!m_filled.empty());
-        }
+        // back to precondition
+        CHECK(m_empty.empty());
+        CHECK(!m_filled.empty());
+    }
+
+    SECTION("emplace")
+    {
+        // check initial state
+        CHECK(m_filled.size() == 2);
+        CHECK(m_filled.m_keys.size() == 2);
+        CHECK(collect_keys(m_filled) == "XC");
+
+        // insert new value
+        auto res1 = m_filled.emplace("A", 3);
+        CHECK(m_filled["A"] == 3);
+        CHECK(res1.second == true);
+        CHECK(res1.first->first == "A");
+        CHECK(res1.first->second == 3);
+
+        // check that key and value were inserted
+        CHECK(m_filled.size() == 3);
+        CHECK(m_filled.m_keys.size() == 3);
+        CHECK(collect_keys(m_filled) == "XCA");
+
+        // insert already present value
+        auto res2 = m_filled.emplace("A", 4);
+        CHECK(m_filled["A"] == 3);
+        CHECK(res2.second == false);
+        CHECK(res2.first->first == "A");
+        CHECK(res2.first->second == 3);
+
+        // check that map remained unchanged
+        CHECK(m_filled.size() == 3);
+        CHECK(m_filled.m_keys.size() == 3);
+        CHECK(collect_keys(m_filled) == "XCA");
+    }
+
+    SECTION("emplace_hint")
+    {
+        // check initial state
+        CHECK(m_filled.size() == 2);
+        CHECK(m_filled.m_keys.size() == 2);
+        CHECK(collect_keys(m_filled) == "XC");
+
+        // insert new value
+        auto res1 = m_filled.emplace_hint(m_filled.end(), "A", 3);
+        CHECK(m_filled["A"] == 3);
+        CHECK(res1->first == "A");
+        CHECK(res1->second == 3);
+
+        // check that key and value were inserted
+        CHECK(m_filled.size() == 3);
+        CHECK(m_filled.m_keys.size() == 3);
+        CHECK(collect_keys(m_filled) == "XCA");
+
+        // insert already present value
+        auto res2 = m_filled.emplace_hint(m_filled.end(), "A", 4);
+        CHECK(m_filled["A"] == 3);
+        CHECK(res2->first == "A");
+        CHECK(res2->second == 3);
+
+        // check that map remained unchanged
+        CHECK(m_filled.size() == 3);
+        CHECK(m_filled.m_keys.size() == 3);
+        CHECK(collect_keys(m_filled) == "XCA");
     }
 }
 

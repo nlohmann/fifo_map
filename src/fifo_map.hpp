@@ -47,30 +47,38 @@ template<class Key>
 class fifo_map_compare
 {
   public:
+    /// constructor given a pointer to a key storage
     fifo_map_compare(std::unordered_map<Key, std::size_t>* k) : keys(k) {}
 
+    /*!
+    This function compares two keys with respect to the order in which they
+    were added to the container. For this, the mapping keys is used.
+    */
     bool operator()(const Key& lhs, const Key& rhs) const
     {
-        const auto l = keys->operator[](lhs);
-        const auto r = keys->operator[](rhs);
+        // look up timestamps for both keys
+        const auto timestamp_lhs = keys->operator[](lhs);
+        const auto timestamp_rhs = keys->operator[](rhs);
 
-        if (l == 0)
+        if (timestamp_lhs == 0)
         {
-            // left value not found
+            // timestamp for lhs not found - cannot be smaller than for rhs
             return false;
         }
-        if (r == 0)
+
+        if (timestamp_rhs == 0)
         {
-            // right value not found
+            // timestamp for rhs not found - timestamp for lhs is smaller
             return true;
         }
 
-        return l < r;
+        // compare timestamps
+        return timestamp_lhs < timestamp_rhs;
     }
 
     void add_key(const Key& key)
     {
-        keys->insert({key, keys->size() + 1});
+        keys->insert({key, timestamp++});
     }
 
     void remove_key(const Key& key)
@@ -79,7 +87,10 @@ class fifo_map_compare
     }
 
   private:
+    /// pointer to a mapping from keys to insertion timestamps
     std::unordered_map<Key, std::size_t>* keys = nullptr;
+    /// the next valid insertion timestamp
+    size_t timestamp = 1;
 };
 
 
@@ -327,6 +338,24 @@ template <
         }
 
         m_map.insert(ilist);
+    }
+
+    /// constructs element in-place
+    template<class... Args>
+    std::pair<iterator, bool> emplace(Args&& ... args)
+    {
+        typename fifo_map::value_type value(std::forward<Args>(args)...);
+        m_compare.add_key(value.first);
+        return m_map.emplace(std::move(value));
+    }
+
+    /// constructs element in-place with hint
+    template<class... Args>
+    iterator emplace_hint(const_iterator hint, Args&& ... args)
+    {
+        typename fifo_map::value_type value(std::forward<Args>(args)...);
+        m_compare.add_key(value.first);
+        return m_map.emplace_hint(hint, std::move(value));
     }
 
     /// remove element at position
