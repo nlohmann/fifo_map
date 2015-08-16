@@ -48,7 +48,7 @@ TEST_CASE("element access")
         CHECK_THROWS_AS(mc.at("Z"), std::out_of_range);
     }
 
-    SECTION("operator[]")
+    SECTION("operator[] (rvalue)")
     {
         CHECK(m["C"] == 1);
         CHECK(m["A"] == 2);
@@ -56,6 +56,20 @@ TEST_CASE("element access")
 
         CHECK_NOTHROW(m["Z"]);
         CHECK(m["Z"] == 0);
+    }
+
+    SECTION("operator[] (lvalue)")
+    {
+        const std::string s_C = "C";
+        const std::string s_A = "A";
+        const std::string s_B = "B";
+        const std::string s_Z = "Z";
+        CHECK(m[s_C] == 1);
+        CHECK(m[s_A] == 2);
+        CHECK(m[s_B] == 3);
+
+        CHECK_NOTHROW(m[s_Z]);
+        CHECK(m[s_Z] == 0);
     }
 }
 
