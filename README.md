@@ -1,0 +1,8 @@
+[![Build Status](https://travis-ci.org/nlohmann/fifo_map.svg?branch=master)](https://travis-ci.org/nlohmann/fifo_map)
+[![Build Status](https://ci.appveyor.com/api/projects/status/1acb366xfyg3qybk?svg=true)](https://ci.appveyor.com/project/nlohmann/fifo_map)
+[![Coverage Status](https://img.shields.io/coveralls/nlohmann/fifo_map.svg)](https://coveralls.io/r/nlohmann/fifo_map)
+[![Try online](https://img.shields.io/badge/try-online-blue.svg)](http://melpon.org/wandbox/permlink/GnGKwji06WeVonlI)
+[![Documentation Status](https://img.shields.io/badge/docs-doxygen-blue.svg)](http://nlohmann.github.io/fifo_map)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/nlohmann/fifo_map/master/LICENSE.MIT)
+[![Github Releases](https://img.shields.io/github/release/nlohmann/fifo_map.svg)](https://github.com/nlohmann/fifo_map/releases)
+[![Github Issues](https://img.shields.io/github/issues/nlohmann/fifo_map.svg)](http://github.com/nlohmann/fifo_map/issues)
