@@ -286,7 +286,7 @@ template <
     std::pair<iterator, bool> insert(const value_type& value)
     {
         m_compare.add_key(value.first);
-        return m_map.inseert(value);
+        return m_map.insert(value);
     }
 
     template<class P>
