@@ -10,15 +10,16 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 
+// allow accessing private members
 #define private public
-#include "fifo_map.hpp"
 
+#include "fifo_map.hpp"
 using nlohmann::fifo_map;
 
 #include <string>
 
 /// helper function to check order of keys
-std::string collect_keys(const fifo_map<std::string, int>& m)
+const auto collect_keys = [](const fifo_map<std::string, int>& m)
 {
     std::string result;
     for (auto x : m)
@@ -26,7 +27,7 @@ std::string collect_keys(const fifo_map<std::string, int>& m)
         result += x.first;
     }
     return result;
-}
+};
 
 TEST_CASE("element access")
 {

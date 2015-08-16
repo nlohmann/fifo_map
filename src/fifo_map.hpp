@@ -25,6 +25,7 @@ SOFTWARE.
 #ifndef NLOHMANN_FIFO_MAP_HPP
 #define NLOHMANN_FIFO_MAP_HPP
 
+#include <limits>
 #include <map>
 #include <vector>
 #include <functional>
@@ -54,7 +55,7 @@ class fifo_map_compare
 
     void add_key(const Key& key)
     {
-        if (find_key(key) == -1)
+        if (find_key(key) == std::numeric_limits<size_t>::max())
         {
             keys.push_back(key);
         }
@@ -74,11 +75,11 @@ class fifo_map_compare
 
         if (it != keys.end())
         {
-            return (it - keys.begin());
+            return static_cast<std::size_t>(it - keys.begin());
         }
         else
         {
-            return -1;
+            return std::numeric_limits<size_t>::max();
         }
     }
 };
@@ -132,13 +133,6 @@ template <
             insert(x);
         }
     }
-
-    fifo_map(const fifo_map&) = default;
-    fifo_map(fifo_map&&) = default;
-    fifo_map& operator=(const fifo_map&) = default;
-
-    /// destructor
-    ~fifo_map() = default;
 
 
     /*
