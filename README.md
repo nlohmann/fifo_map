@@ -6,11 +6,11 @@
 [![Github Releases](https://img.shields.io/github/release/nlohmann/fifo_map.svg)](https://github.com/nlohmann/fifo_map/releases)
 [![Github Issues](https://img.shields.io/github/issues/nlohmann/fifo_map.svg)](http://github.com/nlohmann/fifo_map/issues)
 
-# fifo_map - a FIFO-ordered associative container for C++
+# `fifo_map` – a FIFO-ordered associative container for C++
 
 ## Overview
 
-C++ allows to defined associative containers such as `std::map`. The values are ordered according to their keys and an ordering relation. The `fifo_map` is an associative container which uses the order in which keys were inserted as ordering relation.
+C++ allows to defined associative containers such as `std::map`. The values are ordered according to their keys and an ordering relation. The `fifo_map` is an associative container which uses **the order in which keys were inserted to the container** as ordering relation.
 
 As it has the same interface than `std::map`, it can be used as drop-in replacement. The code is header-only (see file [src/fifo_map.hpp](https://github.com/nlohmann/fifo_map/blob/master/src/fifo_map.hpp)) and only relies on the STL.
 
