@@ -241,7 +241,41 @@ TEST_CASE("modifiers")
 
     SECTION("insert")
     {
-        SECTION("insert value_type")
+        SECTION("insert value_type (lvalue)")
+        {
+            // check initial state
+            CHECK(m_filled.size() == 2);
+            CHECK(m_filled.m_keys.size() == 2);
+            CHECK(collect_keys(m_filled) == "XC");
+
+            // insert new value
+            const nlohmann::fifo_map<std::string, int>::value_type v1 = {"A", 3};
+            auto res1 = m_filled.insert(v1);
+            CHECK(m_filled["A"] == 3);
+            CHECK(res1.second == true);
+            CHECK(res1.first->first == "A");
+            CHECK(res1.first->second == 3);
+
+            // check that key and value were inserted
+            CHECK(m_filled.size() == 3);
+            CHECK(m_filled.m_keys.size() == 3);
+            CHECK(collect_keys(m_filled) == "XCA");
+
+            // insert already present value
+            const nlohmann::fifo_map<std::string, int>::value_type v2 = {"A", 4};
+            auto res2 = m_filled.insert(v2);
+            CHECK(m_filled["A"] == 3);
+            CHECK(res2.second == false);
+            CHECK(res2.first->first == "A");
+            CHECK(res2.first->second == 3);
+
+            // check that map remained unchanged
+            CHECK(m_filled.size() == 3);
+            CHECK(m_filled.m_keys.size() == 3);
+            CHECK(collect_keys(m_filled) == "XCA");
+        }
+
+        SECTION("insert value_type (rvalue)")
         {
             // check initial state
             CHECK(m_filled.size() == 2);
@@ -255,13 +289,13 @@ TEST_CASE("modifiers")
             CHECK(res1.first->first == "A");
             CHECK(res1.first->second == 3);
 
-            // check that key and value way inserted
+            // check that key and value were inserted
             CHECK(m_filled.size() == 3);
             CHECK(m_filled.m_keys.size() == 3);
             CHECK(collect_keys(m_filled) == "XCA");
 
             // insert already present value
-            auto res2 = m_filled.insert({"A", 3});
+            auto res2 = m_filled.insert({"A", 4});
             CHECK(m_filled["A"] == 3);
             CHECK(res2.second == false);
             CHECK(res2.first->first == "A");
@@ -271,6 +305,95 @@ TEST_CASE("modifiers")
             CHECK(m_filled.size() == 3);
             CHECK(m_filled.m_keys.size() == 3);
             CHECK(collect_keys(m_filled) == "XCA");
+        }
+
+        SECTION("insert value_type (lvalue) with hint")
+        {
+            // check initial state
+            CHECK(m_filled.size() == 2);
+            CHECK(m_filled.m_keys.size() == 2);
+            CHECK(collect_keys(m_filled) == "XC");
+
+            // insert new value
+            const nlohmann::fifo_map<std::string, int>::value_type v1 = {"A", 3};
+            auto res1 = m_filled.insert(m_filled.end(), v1);
+            CHECK(m_filled["A"] == 3);
+            CHECK(res1->first == "A");
+            CHECK(res1->second == 3);
+
+            // check that key and value were inserted
+            CHECK(m_filled.size() == 3);
+            CHECK(m_filled.m_keys.size() == 3);
+            CHECK(collect_keys(m_filled) == "XCA");
+
+            // insert already present value
+            const nlohmann::fifo_map<std::string, int>::value_type v2 = {"A", 4};
+            auto res2 = m_filled.insert(m_filled.end(), v2);
+            CHECK(m_filled["A"] == 3);
+            CHECK(res2->first == "A");
+            CHECK(res2->second == 3);
+
+            // check that map remained unchanged
+            CHECK(m_filled.size() == 3);
+            CHECK(m_filled.m_keys.size() == 3);
+            CHECK(collect_keys(m_filled) == "XCA");
+        }
+
+        SECTION("insert value_type (rvalue) with hint")
+        {
+            // check initial state
+            CHECK(m_filled.size() == 2);
+            CHECK(m_filled.m_keys.size() == 2);
+            CHECK(collect_keys(m_filled) == "XC");
+
+            // insert new value
+            auto res1 = m_filled.insert(m_filled.end(), {"A", 3});
+            CHECK(m_filled["A"] == 3);
+            CHECK(res1->first == "A");
+            CHECK(res1->second == 3);
+
+            // check that key and value were inserted
+            CHECK(m_filled.size() == 3);
+            CHECK(m_filled.m_keys.size() == 3);
+            CHECK(collect_keys(m_filled) == "XCA");
+
+            // insert already present value
+            auto res2 = m_filled.insert(m_filled.end(), {"A", 4});
+            CHECK(m_filled["A"] == 3);
+            CHECK(res2->first == "A");
+            CHECK(res2->second == 3);
+
+            // check that map remained unchanged
+            CHECK(m_filled.size() == 3);
+            CHECK(m_filled.m_keys.size() == 3);
+            CHECK(collect_keys(m_filled) == "XCA");
+        }
+
+        SECTION("insert initializer list")
+        {
+            // check initial state
+            CHECK(m_filled.size() == 2);
+            CHECK(m_filled.m_keys.size() == 2);
+            CHECK(collect_keys(m_filled) == "XC");
+
+            // insert initializer list
+            m_filled.insert({{"A", 3}, {"Z", 4}, {"B", 5}});
+            CHECK(m_filled["A"] == 3);
+            CHECK(m_filled["Z"] == 4);
+            CHECK(m_filled["B"] == 5);
+
+            // check that keys and values were inserted
+            CHECK(m_filled.size() == 5);
+            CHECK(m_filled.m_keys.size() == 5);
+            CHECK(collect_keys(m_filled) == "XCAZB");
+
+            // insert empty initializer list
+            m_filled.insert({});
+
+            // check that map remained unchanged
+            CHECK(m_filled.size() == 5);
+            CHECK(m_filled.m_keys.size() == 5);
+            CHECK(collect_keys(m_filled) == "XCAZB");
         }
     }
 }
