@@ -502,6 +502,51 @@ TEST_CASE("modifiers")
     }
 }
 
+TEST_CASE("lookup")
+{
+    nlohmann::fifo_map<std::string, int> m = {{"A", 1}, {"B", 2}};
+    const nlohmann::fifo_map<std::string, int> m_c = m;
+
+    SECTION("count")
+    {
+        CHECK(m.count("A") == 1);
+        CHECK(m.count("B") == 1);
+        CHECK(m.count("C") == 0);
+    }
+
+    SECTION("find (iterators)")
+    {
+        auto it_A = m.find("A");
+        CHECK(it_A == m.begin());
+        CHECK(it_A->first == "A");
+        CHECK(it_A->second == 1);
+
+        auto it_B = m.find("B");
+        CHECK(it_B == ++m.begin());
+        CHECK(it_B->first == "B");
+        CHECK(it_B->second == 2);
+
+        auto it_C = m.find("C");
+        CHECK(it_C == m.end());
+    }
+
+    SECTION("find (const_iterators)")
+    {
+        auto it_A = m_c.find("A");
+        CHECK(it_A == m_c.cbegin());
+        CHECK(it_A->first == "A");
+        CHECK(it_A->second == 1);
+
+        auto it_B = m_c.find("B");
+        CHECK(it_B == ++m_c.cbegin());
+        CHECK(it_B->first == "B");
+        CHECK(it_B->second == 2);
+
+        auto it_C = m_c.find("C");
+        CHECK(it_C == m_c.cend());
+    }
+}
+
 TEST_CASE("observers")
 {
     nlohmann::fifo_map<std::string, int> m = {{"A", 1}, {"B", 2}};
