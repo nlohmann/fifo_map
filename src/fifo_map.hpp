@@ -57,23 +57,23 @@ class fifo_map_compare
     bool operator()(const Key& lhs, const Key& rhs) const
     {
         // look up timestamps for both keys
-        const auto timestamp_lhs = keys->operator[](lhs);
-        const auto timestamp_rhs = keys->operator[](rhs);
+        const auto timestamp_lhs = keys->find(lhs);
+        const auto timestamp_rhs = keys->find(rhs);
 
-        if (timestamp_lhs == 0)
+        if (timestamp_lhs == keys->end())
         {
             // timestamp for lhs not found - cannot be smaller than for rhs
             return false;
         }
 
-        if (timestamp_rhs == 0)
+        if (timestamp_rhs == keys->end())
         {
             // timestamp for rhs not found - timestamp for lhs is smaller
             return true;
         }
 
         // compare timestamps
-        return timestamp_lhs < timestamp_rhs;
+        return timestamp_lhs->second < timestamp_rhs->second;
     }
 
     void add_key(const Key& key)

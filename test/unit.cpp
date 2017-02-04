@@ -763,3 +763,21 @@ TEST_CASE("non-member functions")
         CHECK(!m_filled.empty());
     }
 }
+
+TEST_CASE("regression tests")
+{
+    SECTION("issue 2: find() adding a key")
+    {
+        nlohmann::fifo_map<std::string, uint8_t> pe;
+        for (int i = 0; i < 1000; i++)
+        {
+
+            std::string key = "custom_";
+            key += std::to_string(i);
+
+            //if(0 == pe.count(key)){
+            CHECK(pe.find(key) == pe.end());
+            pe[key] = (i + 128) & 0xFF;
+        }
+    }
+}
