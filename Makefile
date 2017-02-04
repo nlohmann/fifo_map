@@ -14,6 +14,12 @@ FLAGS = -Wall -Wextra -pedantic -Weffc++ -Wcast-align -Wcast-qual -Wctor-dtor-pr
 unit: test/unit.cpp src/fifo_map.hpp test/catch.hpp
 	$(CXX) -std=c++11 $(CXXFLAGS) $(FLAGS) $(CPPFLAGS) -I src -I test $< $(LDFLAGS) -o $@
 
+check: unit
+	./unit "*"
+
+check-fast: unit
+	./unit
+
 # pretty printer
 pretty:
 	astyle --style=allman --indent=spaces=4 --indent-modifiers \
