@@ -8,7 +8,7 @@
 */
 
 #define CATCH_CONFIG_MAIN
-#include "catch.hpp"
+#include <catch/catch.hpp>
 
 // allow accessing private members
 #define private public
