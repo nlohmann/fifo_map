@@ -6,6 +6,8 @@ add_executable(unit
     src/fifo_map.hpp test/thirdparty/catch/catch.hpp test/unit.cpp
 )
 
+target_include_directories(unit PRIVATE "test" "src" "test/thirdparty")
+
 if(MSVC)
     set(CMAKE_CXX_FLAGS
         "/EHsc"
