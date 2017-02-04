@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(fifo_map CXX)
+project(fifo_map LANGUAGES CXX)
 
 add_executable(unit
-    src/fifo_map.hpp test/catch.hpp test/unit.cpp
+    src/fifo_map.hpp test/thirdparty/catch/catch.hpp test/unit.cpp
 )
 
 if(MSVC)
