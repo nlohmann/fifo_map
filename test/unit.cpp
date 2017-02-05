@@ -17,6 +17,7 @@
 using nlohmann::fifo_map;
 
 #include <string>
+#include <type_traits>
 
 /// helper function to check order of keys
 const auto collect_keys = [](const fifo_map<std::string, int>& m)
@@ -28,6 +29,24 @@ const auto collect_keys = [](const fifo_map<std::string, int>& m)
     }
     return result;
 };
+
+TEST_CASE("types")
+{
+    using map = std::map<std::string, int>;
+    using fmap = fifo_map<std::string, int>;
+
+    CHECK((std::is_same<map::key_type, fmap::key_type>::value));
+    CHECK((std::is_same<map::mapped_type, fmap::mapped_type>::value));
+    CHECK((std::is_same<map::value_type, fmap::value_type>::value));
+    CHECK((std::is_same<map::size_type, fmap::size_type>::value));
+    CHECK((std::is_same<map::difference_type, fmap::difference_type>::value));
+    CHECK((std::is_same<fmap::key_compare, nlohmann::fifo_map_compare<fmap::key_type>>::value));
+    CHECK((std::is_same<map::allocator_type, fmap::allocator_type>::value));
+    CHECK((std::is_same<map::reference, fmap::reference>::value));
+    CHECK((std::is_same<map::const_reference, fmap::const_reference>::value));
+    CHECK((std::is_same<map::pointer, fmap::pointer>::value));
+    CHECK((std::is_same<map::const_pointer, fmap::const_pointer>::value));
+}
 
 TEST_CASE("element access")
 {
@@ -236,6 +255,9 @@ TEST_CASE("capacity")
     {
         CHECK(m_empty.max_size() >= m_empty.size());
         CHECK(m_filled.max_size() >= m_filled.size());
+
+        CHECK(m_empty.max_size() == m_empty.m_map.max_size());
+        CHECK(m_filled.max_size() == m_filled.m_map.max_size());
     }
 }
 
@@ -252,6 +274,11 @@ TEST_CASE("modifiers")
         m_empty.clear();
         CHECK(m_filled.empty());
         CHECK(m_empty.empty());
+
+        CHECK(m_empty.m_map.empty());
+        CHECK(m_empty.m_keys.empty());
+        CHECK(m_filled.m_map.empty());
+        CHECK(m_filled.m_keys.empty());
     }
 
     SECTION("insert")
