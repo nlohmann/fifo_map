@@ -125,6 +125,9 @@ template <
     /// default constructor
     fifo_map() : m_keys(), m_compare(&m_keys), m_map(m_compare) {}
 
+    /// copy constructor
+    fifo_map(const fifo_map &f) : m_keys(f.m_keys), m_compare(&m_keys), m_map(f.m_map.begin(), f.m_map.end(), m_compare) {}
+
     /// constructor for a range of elements
     template<class InputIterator>
     fifo_map(InputIterator first, InputIterator last)
