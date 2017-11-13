@@ -808,3 +808,16 @@ TEST_CASE("regression tests")
         }
     }
 }
+
+TEST_CASE("constructors")
+{
+    SECTION("range iterators constructor")
+    {
+        std::map<std::string, int> inputs = {{"A", 1}, {"B", 2}};
+        nlohmann::fifo_map<std::string, int> m(inputs.begin(), inputs.end());
+        CHECK(m.size() == 2);
+        CHECK(m["A"] == 1);
+        CHECK(m["B"] == 2);
+
+    }
+}
