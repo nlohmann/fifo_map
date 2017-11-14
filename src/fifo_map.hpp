@@ -131,7 +131,7 @@ template <
     /// constructor for a range of elements
     template<class InputIterator>
     fifo_map(InputIterator first, InputIterator last)
-        : m_keys(), m_compare(m_keys), m_map(m_compare)
+        : m_keys(), m_compare(&m_keys), m_map(m_compare)
     {
         for (auto it = first; it != last; ++it)
         {
