@@ -49,11 +49,11 @@ class fifo_map_compare
   public:
     /// constructor given a pointer to a key storage
     fifo_map_compare(
-        std::unordered_map<Key, std::size_t>* k,
+        std::unordered_map<Key, std::size_t>* keys,
         std::size_t timestamp = 1)
         :
-        timestamp(timestamp),
-        keys(k)
+        m_timestamp(timestamp),
+        m_keys(keys)
     {}
 
     /*!
@@ -63,16 +63,16 @@ class fifo_map_compare
     bool operator()(const Key& lhs, const Key& rhs) const
     {
         // look up timestamps for both keys
-        const auto timestamp_lhs = keys->find(lhs);
-        const auto timestamp_rhs = keys->find(rhs);
+        const auto timestamp_lhs = m_keys->find(lhs);
+        const auto timestamp_rhs = m_keys->find(rhs);
 
-        if (timestamp_lhs == keys->end())
+        if (timestamp_lhs == m_keys->end())
         {
             // timestamp for lhs not found - cannot be smaller than for rhs
             return false;
         }
 
-        if (timestamp_rhs == keys->end())
+        if (timestamp_rhs == m_keys->end())
         {
             // timestamp for rhs not found - timestamp for lhs is smaller
             return true;
@@ -84,20 +84,25 @@ class fifo_map_compare
 
     void add_key(const Key& key)
     {
-        keys->insert({key, timestamp++});
+        m_keys->insert({key, m_timestamp++});
     }
 
     void remove_key(const Key& key)
     {
-        keys->erase(key);
+        m_keys->erase(key);
     }
 
-    /// the next valid insertion timestamp
-    size_t timestamp = 1;
+    std::size_t timestamp() const
+    {
+        return m_timestamp;
+    }
 
   private:
+    /// the next valid insertion timestamp
+    std::size_t m_timestamp = 1;
+
     /// pointer to a mapping from keys to insertion timestamps
-    std::unordered_map<Key, std::size_t>* keys = nullptr;
+    std::unordered_map<Key, std::size_t>* m_keys = nullptr;
 };
 
 
@@ -133,7 +138,7 @@ template <
     fifo_map() : m_keys(), m_compare(&m_keys), m_map(m_compare) {}
 
     /// copy constructor
-    fifo_map(const fifo_map &f) : m_keys(f.m_keys), m_compare(&m_keys, f.m_compare.timestamp), m_map(f.m_map.begin(), f.m_map.end(), m_compare) {}
+    fifo_map(const fifo_map &f) : m_keys(f.m_keys), m_compare(&m_keys, f.m_compare.timestamp()), m_map(f.m_map.begin(), f.m_map.end(), m_compare) {}
 
     /// constructor for a range of elements
     template<class InputIterator>
