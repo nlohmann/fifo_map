@@ -92,10 +92,15 @@ class fifo_map_compare
         m_keys->erase(key);
     }
 
-    std::size_t timestamp() const
-    {
-        return m_timestamp;
-    }
+  private:
+    /// helper to access m_timestamp from fifo_map copy ctor,
+    /// must have same number of template args as fifo_map
+    template <
+        class MapKey,
+        class MapT,
+        class MapCompare,
+        class MapAllocator
+        > friend class fifo_map;
 
   private:
     /// the next valid insertion timestamp
@@ -138,7 +143,7 @@ template <
     fifo_map() : m_keys(), m_compare(&m_keys), m_map(m_compare) {}
 
     /// copy constructor
-    fifo_map(const fifo_map &f) : m_keys(f.m_keys), m_compare(&m_keys, f.m_compare.timestamp()), m_map(f.m_map.begin(), f.m_map.end(), m_compare) {}
+    fifo_map(const fifo_map &f) : m_keys(f.m_keys), m_compare(&m_keys, f.m_compare.m_timestamp), m_map(f.m_map.begin(), f.m_map.end(), m_compare) {}
 
     /// constructor for a range of elements
     template<class InputIterator>
