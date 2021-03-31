@@ -18,8 +18,11 @@ if(MSVC)
     add_definitions(-D_SCL_SECURE_NO_WARNINGS)
 else(MSVC)
     set(CMAKE_CXX_FLAGS
-        "-std=c++11 -stdlib=libc++"
+        "-std=c++11"
     )
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+    endif()
 endif(MSVC)
 
 include_directories(
