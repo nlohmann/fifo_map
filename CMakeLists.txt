@@ -7,6 +7,7 @@ add_executable(unit
 )
 
 target_include_directories(unit PRIVATE "test" "src" "test/thirdparty")
+target_compile_options(unit PUBLIC -Werror -Wall -Wextra)
 
 if(MSVC)
     set(CMAKE_CXX_FLAGS
