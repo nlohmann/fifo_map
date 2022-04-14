@@ -59,13 +59,13 @@ TEST_CASE("element access")
         CHECK(m.at("A") == 2);
         CHECK(m.at("B") == 3);
 
-        CHECK_THROWS_AS(m.at("Z"), std::out_of_range);
+        CHECK_THROWS_AS(m.at("Z"), std::out_of_range&);
 
         CHECK(mc.at("C") == 1);
         CHECK(mc.at("A") == 2);
         CHECK(mc.at("B") == 3);
 
-        CHECK_THROWS_AS(mc.at("Z"), std::out_of_range);
+        CHECK_THROWS_AS(mc.at("Z"), std::out_of_range&);
     }
 
     SECTION("operator[] (rvalue)")
