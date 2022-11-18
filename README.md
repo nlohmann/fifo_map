@@ -12,7 +12,7 @@
 
 C++ allows to defined associative containers such as `std::map`. The values are ordered according to their keys and an ordering relation. The `fifo_map` is an associative container which uses **the order in which keys were inserted to the container** as ordering relation.
 
-As it has the same interface than `std::map`, it can be used as drop-in replacement. The code is header-only (see file [src/fifo_map.hpp](https://github.com/nlohmann/fifo_map/blob/master/src/fifo_map.hpp)) and only relies on the STL.
+As it has the same interface than `std::map`, it can be used as drop-in replacement. The code is header-only (see file [include/nlohmann/fifo_map.hpp](https://raw.githubusercontent.com/nlohmann/fifo_map/c0ea4f41f0d32cf99a828a29ffe6382f774c1d0f/src/fifo_map.hpp)) and only relies on the STL.
 
 ## Complexity
 
@@ -25,12 +25,12 @@ Inserting a value (via `operator[]`, `insert`) and removing a value (`erase`) re
 ## Example
 
 ```cpp
-#include "src/fifo_map.hpp"
-
-// for convenience
-using nlohmann::fifo_map;
+#include <nlohmann/fifo_map.hpp>
 
 int main() {
+    // for convenience
+    using nlohmann::fifo_map;
+
     // create fifo_map with template arguments
     fifo_map<int, std::string> m;
 
@@ -63,7 +63,15 @@ int main() {
 }
 ```
 
-[Try this code online.](http://melpon.org/wandbox/permlink/l2f2Qxhq95qVKRgE)
+[Try this code online.](https://godbolt.org/z/9odbrzxen)
+
+
+## CMake
+This library provides CMake targets:
+```
+    find_package("nlohmann-fifo-map" REQUIRED)
+    target_link_libraries("main" PRIVATE "nlohmann-fifo-map::nlohmann-fifo-map")
+```
 
 ## License
 
