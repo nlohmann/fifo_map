@@ -2,3 +2,13 @@
 unit
 cm/*
 
+# build directories
+build*/
+
+# Visual Studio / Visual Studio Code
+.vs/
+.vscode/
+out/
+
+#QT-creator
+CMakeLists.txt.user
