@@ -13,7 +13,7 @@
 // allow accessing private members
 #define private public
 
-#include "fifo_map.hpp"
+#include <nlohmann/fifo_map.hpp>
 using nlohmann::fifo_map;
 
 #include <string>
