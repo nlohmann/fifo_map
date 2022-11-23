@@ -1,39 +1,26 @@
-cmake_minimum_required(VERSION 2.8)
 
-project(fifo_map LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.16)
 
-add_executable(unit
-    src/fifo_map.hpp test/thirdparty/catch/catch.hpp test/unit.cpp
+project("nlohmann-fifo-map"
+    VERSION 1.0.0
+    LANGUAGES CXX
 )
 
-target_include_directories(unit PRIVATE "test" "src" "test/thirdparty")
+include(GNUInstallDirs)
 
-if(MSVC)
-    set(CMAKE_CXX_FLAGS
-        "/EHsc"
-    )
-
-    STRING(REPLACE "/O2" "/Od" CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE})
-
-    add_definitions(-D_SCL_SECURE_NO_WARNINGS)
-else(MSVC)
-    set(CMAKE_CXX_FLAGS
-        "-std=c++11"
-    )
-    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
-    endif()
-endif(MSVC)
-
-include_directories(
-    src test
+add_library("nlohmann-fifo-map" INTERFACE)
+add_library("nlohmann-fifo-map::nlohmann-fifo-map" ALIAS "nlohmann-fifo-map")
+add_library("fifo_map::fifo_map" ALIAS "nlohmann-fifo-map") #Only for backward comptability
+target_include_directories("nlohmann-fifo-map" INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-add_library(${PROJECT_NAME} INTERFACE)
-add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
-target_include_directories(
-    ${PROJECT_NAME}
-    INTERFACE
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/>
+add_executable("unit"
+    "test/unit.cpp"
 )
+target_include_directories("unit" PRIVATE "test/thirdparty")
+target_link_libraries("unit" PRIVATE "nlohmann-fifo-map::nlohmann-fifo-map")
+
+
