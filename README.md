@@ -94,7 +94,7 @@ All tests passed (1286 assertions in 8 test cases)
 For more information, have a look at the file [.travis.yml](https://github.com/nlohmann/fifo_map/blob/master/.travis.yml).
 
 ## Update 
-There is another open source code called ordered_map.
+There is another open source code called ordered_map that is being developed and checked.
 
 The code is in the following link:
 
